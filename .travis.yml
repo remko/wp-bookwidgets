@@ -1,0 +1,21 @@
+language: php
+php:
+- '5.4'
+- '5.5'
+- '5.6'
+- '7.0'
+- hhvm
+- nightly
+script:
+- make COVERAGE=1 VERSION=$TRAVIS_TAG all check release
+- if [ -f "coverage.txt" ]; then cat coverage.txt; fi
+deploy:
+  provider: releases
+  api_key:
+    secure: 3go3WZ4MwlxvKx8Rm0GWx/T5e3+4Sarp2HXAs0R0a7aVngmjj72ABFZdBXmk+GzP95ab6ikoQOIhQiVKxIKuP4g9J78xO0lxlYyAXizm0OOF5XBChguGjzQ1/K2GDutyr7LrW6d+iW2pt3s2nK32jBXMFA79x6n3QTQila82j3IwTzW8PxmkbClj0zgBSqfGYoKiulloOy9qC2mqustAhgemmyfH7nGDF1+yJwEVCetYDujZg2j0N6SXDVpGON8DrY3EMkl0S1eWNvMGepCFDcOqR1AqRo2kHBR+c7AcRxYCTcmwOBqOEYqxDCKrG47F/jRfcLvimvymAKKnkc2i07b583ZiE/wQAQ3C0DJfqYdaYw9HYP+SXOY4T52dWegZ7kzIB0J6mfwUiMwTvZTajUMJ/mAhaw9o+rvyOpiMbkhW5PbxI9HCNOeTu52U1CIF7k1gLfHZ8gYVwlkg35z5szy05CJrI3CSvxhD8Xm3j/SklQvUMo+qNbsP1O0MHBJMoYSuhvlnuU3zuv8MDch+gvk/oD4K6j7M3RmT8v//TP5fcTK9uggW4gH7q7KA+eJnO3KpW055aaspBDKpuquptq1EI8rHVIop3VJe/0+KQYhSabFLo+5GwqD111GJAFjrIiPsMSNrr1/Lmz4mgBz1MGDMWAiVz6ohT+JXcTc+xjM=
+  file: wp-bookwidgets_$TRAVIS_TAG.zip
+  on:
+    repo: remko/wp-bookwidgets
+    tags: true
+    php: 5.4
+  overwrite: true
