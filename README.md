@@ -26,6 +26,7 @@ Supported parameters:
 - `code`: Widget shortcode
 - `width`: Width of the widget frame
 - `height`: Height of the widget frame
+- `allowfullscreen`: set this to '1' to add a fullscreen button in the bottom right corner
 
 
 ## Installation
@@ -35,6 +36,10 @@ Supported parameters:
 3. Use the Settings→BookWidgets screen to configure the plugin
 
 ## Changelog
+
+### 0.3
+
+- Added a allowfullscreen option to bw_embed
 
 ### 0.2
 

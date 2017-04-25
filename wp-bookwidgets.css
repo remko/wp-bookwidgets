@@ -1,0 +1,30 @@
+.bw-widget-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
+.bw-widget-frame {
+	margin-bottom: 36px;
+}
+
+.bw-widget-wrapper > a.bw-widget-new-tab {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	box-shadow: 0 0 0 0;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.bw-widget-wrapper > a.bw-widget-new-tab:hover {
+	box-shadow: 0 0 0 0;
+	text-decoration: none;
+}
+
+.bw-icon {
+  	width: 30px;
+  	height: 30px;
+  	fill: currentColor;
+}

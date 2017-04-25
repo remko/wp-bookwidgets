@@ -1,5 +1,5 @@
 VERSION ?= $(shell git describe)
-RELEASE_FILES=wp-bookwidgets/readme.txt wp-bookwidgets/wp-bookwidgets.php
+RELEASE_FILES=wp-bookwidgets/readme.txt wp-bookwidgets/wp-bookwidgets.php wp-bookwidgets/wp-bookwidgets.css
 RELEASE_PACKAGE=wp-bookwidgets_$(VERSION).zip
 
 all: readme.txt
