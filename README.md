@@ -26,7 +26,7 @@ Supported parameters:
 - `code`: Widget shortcode
 - `width`: Width of the widget frame
 - `height`: Height of the widget frame
-- `allowfullscreen`: set this to '1' to add a fullscreen button in the bottom right corner
+- `allowfullscreen`: set this to `1` to add a fullscreen button in the bottom right corner
 
 
 ## Installation
