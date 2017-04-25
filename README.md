@@ -39,7 +39,7 @@ Supported parameters:
 
 ### 0.3
 
-- Added a allowfullscreen option to bw_embed
+- Added a `allowfullscreen` option to `bw_embed`
 
 ### 0.2
 
