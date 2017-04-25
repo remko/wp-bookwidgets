@@ -36,6 +36,10 @@ Supported parameters:
 
 ## Changelog
 
+### 0.2
+
+- Tested against WordPress 4.7
+
 ### 0.1
 
 - Initial release
