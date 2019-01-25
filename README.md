@@ -41,10 +41,6 @@ Supported parameters:
 
 - Added a `allowfullscreen` option to `bw_embed`
 
-### 0.2
-
-- Tested against WordPress 4.7
-
 ### 0.1
 
 - Initial release
