@@ -4,7 +4,7 @@
  * Plugin Name: WP BookWidgets
  * Plugin URI: https://github.com/remko/wp-bookwidgets
  * Description: Integrate BookWidgets widgets in your WordPress site
- * Version: 0.3
+ * Version: 0.5
  * Author: Remko Tronçon
  * Author URI: https://el-tramo.be
  * License: MIT
@@ -192,7 +192,6 @@ add_shortcode("bw_embed", function ($atts) {
 
 add_action('wp_enqueue_scripts', function() {
   global $baseURI;
-  wp_enqueue_script("bw_embed_support", "{$baseURI}/js/embed-support.js", false);
   wp_register_style('wp-bookwidgets', plugins_url('wp-bookwidgets.css', __FILE__) );
   wp_enqueue_style('wp-bookwidgets');
 });
