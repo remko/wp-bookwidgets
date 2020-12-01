@@ -1,7 +1,7 @@
 language: php
 php:
 - '7.4'
-- nightly
+#- nightly
 script:
 - make COVERAGE=1 VERSION=$TRAVIS_TAG all check release
 - if [ -f "coverage.txt" ]; then cat coverage.txt; fi
