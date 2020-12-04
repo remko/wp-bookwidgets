@@ -4,7 +4,7 @@
  * Plugin Name: WP BookWidgets
  * Plugin URI: https://github.com/remko/wp-bookwidgets
  * Description: Integrate BookWidgets widgets in your WordPress site
- * Version: 0.6
+ * Version: 0.7
  * Author: Remko Tronçon
  * Author URI: https://el-tramo.be
  * License: MIT
@@ -168,10 +168,10 @@ add_shortcode("bw_embed", function ($atts) {
     $frameName = "bwWidgetFrame{$embedID}";
     $bwForms[] = get_lti_launch_form($a['code'], $formName, $frameName);
     $bwForms[] = get_autolaunch_script($formName);
-    $result .= "<iframe allow=\"microphone\" name={$frameName}";
+    $result .= "<iframe allow=\"microphone *; microphone;\" name={$frameName}";
   }
   else {
-    $result = "<iframe allow=\"microphone\" src=\"" . esc_attr(get_play_link($a["code"])) . "\"";
+    $result = "<iframe allow=\"microphone *; microphone;\" src=\"" . esc_attr(get_play_link($a["code"])) . "\"";
   }
   $result .= " class=\"bw-widget-frame\"";
   if ($a['width']) {
