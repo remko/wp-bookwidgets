@@ -8,7 +8,7 @@ readme.txt: README.md plugin.txt
 	(cat plugin.txt && cat README.md | sed -e 's/^# .*//' | sed -e 's/^## \(.*\)/== \1 ==/') > $@
 
 check:
-	DEBUG_MODE=coverage COVERAGE=$(COVERAGE) php test.php
+	COVERAGE=$(COVERAGE) php test.php
 
 
 wp-bookwidgets/%: %
