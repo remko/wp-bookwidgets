@@ -171,7 +171,7 @@ add_shortcode("bw_embed", function ($atts) {
     $result .= "<iframe allow=\"microphone *; microphone;\" name={$frameName}";
   }
   else {
-    $result = "<iframe allow=\"microphone *; microphone;\" src=\"" . esc_attr(get_play_link($a["code"])) . "\"";
+    $result .= "<iframe allow=\"microphone *; microphone;\" src=\"" . esc_attr(get_play_link($a["code"])) . "\"";
   }
   $result .= " class=\"bw-widget-frame\"";
   if ($a['width']) {
