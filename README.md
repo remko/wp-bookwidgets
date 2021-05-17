@@ -37,6 +37,11 @@ Supported parameters:
 
 ## Changelog
 
+### 0.8
+
+- Fixed bug with missing / badly displayed content following widget when using LTI
+- Fixed layout issues
+
 ### 0.3
 
 - Added a `allowfullscreen` option to `bw_embed`
