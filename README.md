@@ -9,15 +9,23 @@ Use one of the shortcodes in your page or posts to link or embed widgets.
 
 ### `[bw_link]`: Link to a widget
 
-Example: 
+Use the link of the widget from the "Share" dialog in BookWidgets:
+
+    Have a look at [bw_link url="https://www.bookwidgets.com/play/ThIsIsa-LiNk123?teacher_id=123456"]my widget[/bw_link]
+
+If you enabled sharing by shortcode for the widget, you can also link
+using the shortcode of the widget:
 
     Have a look at [bw_link code="ABCDE"]my widget[/bw_link]
 
-    Another widget: [bw_link code="ABCDE"]
-
 ### `[bw_embed]`: Embed a widget
 
-Example: 
+Use the link of the widget from the "Share" dialog in BookWidgets:
+
+    [bw_embed url="https://www.bookwidgets.com/play/ThIsIsa-LiNk123?teacher_id=123456"]
+
+If you enabled sharing by shortcode for the widget, you can also link
+using the shortcode of the widget:
 
     [bw_embed code="ABCDE"]
 
@@ -36,6 +44,10 @@ Supported parameters:
 3. Use the Settings→BookWidgets screen to configure the plugin
 
 ## Changelog
+
+### 0.9
+
+- Add support for `url` parameter to `bw_embed` and `bw_link`
 
 ### 0.8
 

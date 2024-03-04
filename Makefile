@@ -23,3 +23,7 @@ release: $(RELEASE_FILES)
 .PHONY: clean
 clean:
 	-rm -rf $(RELEASE_PACKAGE) *.zip readme.txt
+
+.PHONY: dev-wordpress
+dev-wordpress:
+	docker compose up

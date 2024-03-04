@@ -2,7 +2,7 @@
 Contributors: remko
 Tags: bookwidgets, widgets, education
 Requires at least: 4.0
-Tested up to: 5.2.4
+Tested up to: 6.4.3
 Stable tag: trunk
 License: MIT
 License URI: https://opensource.org/licenses/MIT

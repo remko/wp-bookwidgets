@@ -57,6 +57,10 @@ function get_the_ID() {
   return "page123";
 }
 
+function get_the_title() {
+  return "My site";
+}
+
 function wp_get_current_user() {
   $user = new StdClass();
   $user->ID = "user123";
@@ -89,7 +93,7 @@ function assertEqual($a, $b) {
 
 assertEqual(
   ""
-  . "<form action=\"https://www.bookwidgets.com/lti/play/ABCDE\" method=\"POST\" encType=\"application/x-www-form-urlencoded\" target=\"widgetFrame\" name=\"widgetLaunchForm\">"
+  . "<form action=\"https://www.bookwidgets.com/play/ABCDE\" method=\"POST\" encType=\"application/x-www-form-urlencoded\" target=\"widgetFrame\" name=\"widgetLaunchForm\">"
     . "<input type=\"hidden\" name=\"lti_message_type\" value=\"basic-lti-launch-request\"/>"
     . "<input type=\"hidden\" name=\"lti_version\" value=\"LTI-1p0\"/>"
     . "<input type=\"hidden\" name=\"user_id\" value=\"user123\"/>"
@@ -102,11 +106,37 @@ assertEqual(
     . "<input type=\"hidden\" name=\"oauth_timestamp\" value=\"1234567890\"/>"
     . "<input type=\"hidden\" name=\"oauth_nonce\" value=\"my-unique-id\"/>"
     . "<input type=\"hidden\" name=\"oauth_version\" value=\"1.0\"/>"
+    . "<input type=\"hidden\" name=\"tool_consumer_info_product_family_code\" value=\"wp-bookwidgets\"/>"
+    . "<input type=\"hidden\" name=\"tool_consumer_instance_name\" value=\"My site\"/>"
     . "<input type=\"hidden\" name=\"context_id\" value=\"page123\"/>"
-    . "<input type=\"hidden\" name=\"oauth_signature\" value=\"ZlwuAexmPi0eeN9102XNCnRiaI4=\"/>"
+    . "<input type=\"hidden\" name=\"oauth_signature\" value=\"NirSCiYWBee+c5QpqXR7VAAEZZk=\"/>"
     . "<input type=\"submit\" value=\"Play Widget\" style=\"display: none\"/>"
   . "</form>",
-  wp_bookwidgets\get_lti_launch_form("ABCDE", 'widgetLaunchForm', 'widgetFrame', 'dummy_time', 'dummy_uniqid')
+  wp_bookwidgets\get_lti_launch_form("https://www.bookwidgets.com/play/ABCDE", 'widgetLaunchForm', 'widgetFrame', 'dummy_time', 'dummy_uniqid')
+);
+
+assertEqual(
+  ""
+  . "<form action=\"https://www.bookwidgets.com/play/ABCDE?teacher_id=123456\" method=\"POST\" encType=\"application/x-www-form-urlencoded\" target=\"widgetFrame\" name=\"widgetLaunchForm\">"
+    . "<input type=\"hidden\" name=\"lti_message_type\" value=\"basic-lti-launch-request\"/>"
+    . "<input type=\"hidden\" name=\"lti_version\" value=\"LTI-1p0\"/>"
+    . "<input type=\"hidden\" name=\"user_id\" value=\"user123\"/>"
+    . "<input type=\"hidden\" name=\"roles\" value=\"Student\"/>"
+    . "<input type=\"hidden\" name=\"lis_person_contact_email_primary\" value=\"john@doe.com\"/>"
+    . "<input type=\"hidden\" name=\"lis_person_name_given\" value=\"John\"/>"
+    . "<input type=\"hidden\" name=\"lis_person_name_family\" value=\"Doe\"/>"
+    . "<input type=\"hidden\" name=\"oauth_consumer_key\" value=\"MYKEY\"/>"
+    . "<input type=\"hidden\" name=\"oauth_signature_method\" value=\"HMAC-SHA1\"/>"
+    . "<input type=\"hidden\" name=\"oauth_timestamp\" value=\"1234567890\"/>"
+    . "<input type=\"hidden\" name=\"oauth_nonce\" value=\"my-unique-id\"/>"
+    . "<input type=\"hidden\" name=\"oauth_version\" value=\"1.0\"/>"
+    . "<input type=\"hidden\" name=\"tool_consumer_info_product_family_code\" value=\"wp-bookwidgets\"/>"
+    . "<input type=\"hidden\" name=\"tool_consumer_instance_name\" value=\"My site\"/>"
+    . "<input type=\"hidden\" name=\"context_id\" value=\"page123\"/>"
+    . "<input type=\"hidden\" name=\"oauth_signature\" value=\"yygMp142esoarOKBUVzfB3+id2M=\"/>"
+    . "<input type=\"submit\" value=\"Play Widget\" style=\"display: none\"/>"
+  . "</form>",
+  wp_bookwidgets\get_lti_launch_form("https://www.bookwidgets.com/play/ABCDE?teacher_id=123456", 'widgetLaunchForm', 'widgetFrame', 'dummy_time', 'dummy_uniqid')
 );
 
 // TODO

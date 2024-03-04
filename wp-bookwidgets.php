@@ -4,7 +4,7 @@
  * Plugin Name: WP BookWidgets
  * Plugin URI: https://github.com/remko/wp-bookwidgets
  * Description: Integrate BookWidgets widgets in your WordPress site
- * Version: 0.8
+ * Version: 0.9
  * Author: Remko Tronçon
  * Author URI: https://el-tramo.be
  * License: MIT
@@ -51,21 +51,39 @@ function use_lti() {
   return is_user_logged_in() && get_option("bw_lti_enabled");
 }
 
-function get_play_link($code) {
+function bw_url($path) {
   global $baseURI;
-  return "{$baseURI}/play/{$code}";
+  return "{$baseURI}{$path}";
 }
 
-function get_lti_play_link($code) {
-  global $baseURI;
-  return "{$baseURI}/lti/play/{$code}";
+function get_play_path($atts) {
+  if ($atts["url"] != null) {
+    $url = parse_url($atts["url"]);
+    $path = $url["path"];
+    if ($url["query"] != null) {
+      $path = "{$path}?{$url['query']}";
+    }
+    return $path;
+  }
+  if (use_lti()) {
+    return "/lti/play/{$atts['code']}";
+  }
+  return "/play/{$atts['code']}";
 }
 
-function get_oauth_signature($url, $params, $secret) {
+// See https://www.rfc-editor.org/rfc/rfc5849.html#section-3.4
+function get_oauth_signature($url, $form, $secret) {
+  $qs = [];
+  $purl = parse_url($url);
+  if (array_key_exists("query", $purl) && $purl["query"] != null) {
+    parse_str($purl["query"], $qs);
+  }
+  $params = array_merge($form, $qs);
   ksort($params);
+  $baseStringURI = strtok($url, "?");
   $baseString = implode("&", array_map('rawurlencode', [
     "POST",
-    $url,
+    $baseStringURI,
     implode("&", array_map(function ($key, $value) {
       return rawurlencode($key) . '=' . rawurlencode($value);
     }, array_keys($params), $params))
@@ -74,7 +92,7 @@ function get_oauth_signature($url, $params, $secret) {
   return base64_encode(hash_hmac('sha1', $baseString, $key, true));
 }
 
-function get_lti_launch_form($code, $name, $target = null, $time = 'time', $uniqid = 'uniqid') {
+function get_lti_launch_form($url, $name, $target = null, $time = 'time', $uniqid = 'uniqid') {
   $widgetLaunchOptions = new WidgetLaunchOptions;
   $widgetLaunchOptions->student = wp_get_current_user();
   $widgetLaunchOptions->context_id = get_the_ID();
@@ -98,16 +116,18 @@ function get_lti_launch_form($code, $name, $target = null, $time = 'time', $uniq
     "oauth_nonce" => call_user_func($uniqid, "", true),
     "oauth_version" => "1.0",
 
+    "tool_consumer_info_product_family_code" => "wp-bookwidgets",
+    "tool_consumer_instance_name" => get_the_title(),
+
     "context_id" => $widgetLaunchOptions->context_id,
     "custom_teacher_email" => $widgetLaunchOptions->teacher_email,
     "custom_student_class_id" => $widgetLaunchOptions->student_class_id,
     "custom_submit_url" => $widgetLaunchOptions->submit_url,
   ], function ($value) { return $value !== null; });
 
-  $action = get_lti_play_link($code);
-  $signature = esc_attr(get_oauth_signature($action, $params, get_option("bw_lti_consumer_secret")));
+  $signature = esc_attr(get_oauth_signature($url, $params, get_option("bw_lti_consumer_secret")));
 
-  $form = "<form action=\"{$action}\" method=\"POST\" encType=\"application/x-www-form-urlencoded\"";
+  $form = "<form action=\"{$url}\" method=\"POST\" encType=\"application/x-www-form-urlencoded\"";
   if ($target) {
     $form .= " target=\"{$target}\"";
   }
@@ -134,12 +154,13 @@ function get_new_tab_icon() {
 add_shortcode('bw_link', function($atts, $content = null) {
   $a = shortcode_atts([
     'code' => '',
+    'url' => null,
   ], $atts);
-  $text = empty($content) ? $a["code"] : $content;
-  $link = use_lti()
-    ? home_url("?bw_link={$a['code']}")
-    : get_play_link($a["code"]);
-  return "<a href=\"" . esc_attr($link) . "\">{$text}</a>";
+  $text = !empty($content) ? $content : (!empty($a["url"]) ? $a["url"] : $a["code"]);
+  $url = use_lti()
+    ? home_url("?bw_link=" . urlencode(get_play_path($a)))
+    : bw_url(get_play_path($a));
+  return "<a href=\"" . esc_attr($url) . "\">{$text}</a>";
 });
 
 $bwNextEmbedID = 0;
@@ -155,23 +176,25 @@ add_action('wp_footer', function () {
 add_shortcode("bw_embed", function ($atts) {
   $a = shortcode_atts([
     'code' => '',
+    'url' => null,
     'width' => null,
     'height' => null,
     'allowfullscreen' => null
   ], $atts);
   $result = "<div class=\"bw-widget-wrapper\">";
+  $url = bw_url(get_play_path($a));
   if (use_lti()) {
     global $bwNextEmbedID;
     global $bwForms;
     $embedID = $bwNextEmbedID++;
     $formName = "bwWidgetLaunchForm{$embedID}";
     $frameName = "bwWidgetFrame{$embedID}";
-    $bwForms[] = get_lti_launch_form($a['code'], $formName, $frameName);
+    $bwForms[] = get_lti_launch_form($url, $formName, $frameName);
     $bwForms[] = get_autolaunch_script($formName);
     $result .= "<iframe allow=\"microphone *; microphone;\" name={$frameName}";
   }
   else {
-    $result .= "<iframe allow=\"microphone *; microphone;\" src=\"" . esc_attr(get_play_link($a["code"])) . "\"";
+    $result .= "<iframe allow=\"microphone *; microphone;\" src=\"" . esc_attr($url) . "\"";
   }
   $result .= " class=\"bw-widget-frame\"";
   if ($a['width']) {
@@ -182,7 +205,7 @@ add_shortcode("bw_embed", function ($atts) {
   }
   $result .= "></iframe>";
   if (($a['allowfullscreen'] == "1") || ($a['allowfullscreen'] == "true")) {
-    $result .= "<a class=\"bw-widget-new-tab\" href=\"" . esc_attr(get_play_link($a["code"])) . "\" target=\"_blank\">" . get_new_tab_icon() . "</a>";
+    $result .= "<a class=\"bw-widget-new-tab\" href=\"" . esc_attr($url) . "\" target=\"_blank\">" . get_new_tab_icon() . "</a>";
   }
   $result .= "</div>";
 
@@ -191,7 +214,6 @@ add_shortcode("bw_embed", function ($atts) {
 
 
 add_action('wp_enqueue_scripts', function() {
-  global $baseURI;
   wp_register_style('wp-bookwidgets', plugins_url('wp-bookwidgets.css', __FILE__) );
   wp_enqueue_style('wp-bookwidgets');
 });
@@ -281,7 +303,7 @@ add_action('admin_menu', function () {
 if (isset($_GET['bw_link'])) {
   // add_filter('the_title','bw_link_page_title');
   add_filter('the_content', function () {
-    return get_lti_launch_form($_GET["bw_link"], 'widgetLaunchForm')
+    return get_lti_launch_form(bw_url($_GET["bw_link"]), 'widgetLaunchForm')
       . get_autolaunch_script("widgetLaunchForm");
   });
   add_action('template_redirect', function () {
