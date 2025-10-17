@@ -65,10 +65,11 @@ function get_play_path($atts) {
     }
     return $path;
   }
+  $code = sanitize_text_field($atts["code"]);
   if (use_lti()) {
-    return "/lti/play/{$atts['code']}";
+    return "/lti/play/{$code}";
   }
-  return "/play/{$atts['code']}";
+  return "/play/{$code}";
 }
 
 // See https://www.rfc-editor.org/rfc/rfc5849.html#section-3.4
@@ -156,7 +157,7 @@ add_shortcode('bw_link', function($atts, $content = null) {
     'code' => '',
     'url' => null,
   ], $atts);
-  $text = !empty($content) ? $content : (!empty($a["url"]) ? $a["url"] : $a["code"]);
+  $text = sanitize_text_field(!empty($content) ? $content : (!empty($a["url"]) ? $a["url"] : $a["code"]));
   $url = use_lti()
     ? home_url("?bw_link=" . urlencode(get_play_path($a)))
     : bw_url(get_play_path($a));
