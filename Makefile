@@ -22,8 +22,17 @@ release: $(RELEASE_FILES)
 
 .PHONY: clean
 clean:
-	-rm -rf $(RELEASE_PACKAGE) *.zip readme.txt
+	-rm -rf $(RELEASE_PACKAGE) *.zip readme.txt wp-bookwidgets
 
 .PHONY: dev-wordpress
 dev-wordpress:
 	docker compose up
+
+.PHONY: install-tools
+install-tools:
+	npm -g i @wordpress/env
+
+.PHONY: dev
+dev:
+	wp-env start
+
