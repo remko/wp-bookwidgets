@@ -45,6 +45,10 @@ Supported parameters:
 
 ## Changelog
 
+### 0.10
+
+- Sanitize `code` parameter.
+
 ### 0.9
 
 - Add support for `url` parameter to `bw_embed` and `bw_link`
